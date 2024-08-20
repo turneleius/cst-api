@@ -28,11 +28,17 @@ app.get('/users', (req, res) => {
     res.send(users);
 });
 
-app.get('/users/:id', (req, res) => {
-    const user = users.find(user => user.id === parseInt(req.params.id));
-    if (!user) return res.status(404).send('User not found');
-    res.send(user);
-});
+app.get('/users/:id',
+    (req, res, next) => {
+        res.set('turnell', 'was here');
+        next()
+    },
+    (req, res) => {
+        const turnell = res.get('turnell');
+        const user = users.find(user => user.id === parseInt(req.params.id));
+        if (!user) return res.status(404).send('User not found');
+        res.send({ user, turnell });
+    });
 
 
 
